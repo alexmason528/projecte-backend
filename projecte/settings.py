@@ -49,6 +49,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -138,7 +140,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = str(ROOT_DIR.path('media/'))
+MEDIA_ROOT = str(ROOT_DIR.path('media'))
+
+CORS_ORIGIN_WHITELIST = ['127.0.0.1:3000', 'localhost:3000', '127.0.0.1:3002', 'localhost:3002']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
