@@ -17,7 +17,7 @@ import environ
 
 env = environ.Env()
 
-ROOT_DIR = environ.Path(__file__) - 2
+ROOT_DIR = environ.Path(__file__) - 3
 
 dotenv.read_dotenv(os.path.join(ROOT_DIR.root, '.env'))
 

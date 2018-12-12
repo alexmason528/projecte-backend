@@ -16,6 +16,6 @@ from django.core.wsgi import get_wsgi_application
 BASE_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '.env')
 dotenv.read_dotenv(BASE_DIR)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "projecte.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "projecte.settings.prod")
 
 application = get_wsgi_application()
