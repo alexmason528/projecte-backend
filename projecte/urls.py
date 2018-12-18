@@ -21,6 +21,7 @@ from django.contrib import admin
 api_urls = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('authentication.urls')),
+    url(r'^api/', include('api.urls')),
 ]
 
 api_urls += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
