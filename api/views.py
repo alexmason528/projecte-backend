@@ -1,8 +1,9 @@
-from django.shortcuts import render
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import MultiPartParser
+
+from utils.pagination import StandardResultsSetPagination
 
 from .models import Item, Category
 
@@ -18,6 +19,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     parser_classes = (MultiPartParser,)
+    pagination_class = StandardResultsSetPagination
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request': request})
@@ -32,12 +34,7 @@ class CategoryView(generics.ListAPIView):
     serializer_class = CategorySerializer
 
     def get(self, request, item):
-        item = item.replace('-', ' ')
+        category = self.get_queryset().get(slug=item)
+        serializer = self.get_serializer(category)
 
-        try:
-            category = self.get_queryset().get(name__iexact=item)
-            serializer = self.get_serializer(category)
-
-            return Response(serializer.data.get('children'))
-        except:
-            raise ValidationError('Category not found')
+        return Response(serializer.data.get('children'))

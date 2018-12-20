@@ -1,95 +1,95 @@
-Id,Name,Path,ParentID_Fk
-1,Art,art,
-2,Automobile,automobile,
-3,Real estate,real-estate,
-4,Valuable,valuable,
-5,Paintings,art.paintings,1
-6,Objects,art.objects,1
-7,Miscellaneous,art.miscellaneous,1
-8,Cars,automobile.cars,2
-9,Motobikes,automobile.motobikes,2
-10,Houses,real-estate.houses,3
-11,Appartments,real-estate.appartments,3
-12,Estate,real-estate.estate,3
-13,Commercial property,real-estate.commercial-property,3
-14,Jewelry,valuable.jewelry,4
-15,Antiques,valuable.antiques,4
-16,Collectibles,valuable.collectibles,4
-17,Miscellaneous,valuable.miscellaneous,4
-18,< 1800,art.paintings.<-1800,5
-19,1850 - 1899,art.paintings.1850-1899,5
-20,1900 - 1950,art.paintings.1900-1950,5
-21,1951 - 2000,art.paintings.1951-2000,5
-22,2001 >,art.paintings.2001->,5
-23,Alfa Romeo,automobile.cars.alfa-romeo,8
-24,Aston Martin,automobile.cars.aston-martin,8
-25,Audi,automobile.cars.audi,8
-26,Bentley,automobile.cars.bentley,8
-27,Buick,automobile.cars.buick,8
-28,BMW,automobile.cars.bmw,8
-29,Chevrolet,automobile.cars.chevrolet,8
-30,Chrysler,automobile.cars.chrysler,8
-31,Citroen,automobile.cars.citroen,8
-32,Dacia,automobile.cars.dacia,8
-33,Daewoo,automobile.cars.daewoo,8
-34,Daihatsu,automobile.cars.daihatsu,8
-35,Dodge,automobile.cars.dodge,8
-36,Ferarri,automobile.cars.ferarri,8
-37,Fiatv,automobile.cars.fiatv,8
-38,Ford,automobile.cars.ford,8
-39,Honda,automobile.cars.honda,8
-40,Hummer,automobile.cars.hummer,8
-41,Hyundai,automobile.cars.hyundai,8
-42,Infiniti,automobile.cars.infiniti,8
-43,Isuzu,automobile.cars.isuzu,8
-44,Jaguarv,automobile.cars.jaguarv,8
-45,Jeep,automobile.cars.jeep,8
-46,Kia,automobile.cars.kia,8
-47,Lada,automobile.cars.lada,8
-48,Lamborghini,automobile.cars.lamborghini,8
-49,Lancia,automobile.cars.lancia,8
-50,Land-Rover,automobile.cars.land-rover,8
-51,Lexus,automobile.cars.lexus,8
-52,Lotus,automobile.cars.lotus,8
-53,Maserati,automobile.cars.maserati,8
-54,Mazda,automobile.cars.mazda,8
-55,Mercedes-Benz,automobile.cars.mercedes-benz,8
-56,MG,automobile.cars.mg,8
-57,Mini,automobile.cars.mini,8
-58,Mitsubishi,automobile.cars.mitsubishi,8
-59,Nissan,automobile.cars.nissan,8
-60,Opel,automobile.cars.opel,8
-61,Peugeot,automobile.cars.peugeot,8
-62,Porsche,automobile.cars.porsche,8
-63,Renault,automobile.cars.renault,8
-64,Rolls-Royce,automobile.cars.rolls-royce,8
-65,Rover,automobile.cars.rover,8
-66,Saab,automobile.cars.saab,8
-67,Seat,automobile.cars.seat,8
-68,Skoda,automobile.cars.skoda,8
-69,Smart,automobile.cars.smart,8
-70,SsangYong,automobile.cars.ssangyong,8
-71,Subaru,automobile.cars.subaru,8
-72,Suzuki,automobile.cars.suzuki,8
-73,Toyota,automobile.cars.toyota,8
-74,TVR,automobile.cars.tvr,8
-75,Volvo,automobile.cars.volvo,8
-76,VW-Volkswagen,automobile.cars.vw-volkswagen,8
-77,Oldtimer,automobile.cars.oldtimer,8
-78,Others,automobile.cars.others,8
-79,Aprilia,automobile.motobikes.aprilia,9
-80,BMW,automobile.motobikes.bmw,9
-81,Ducati,automobile.motobikes.ducati,9
-82,Gilera,automobile.motobikes.gilera,9
-83,Harley-Davidson,automobile.motobikes.harley-davidson,9
-84,Husqvana,automobile.motobikes.husqvana,9
-85,Honda,automobile.motobikes.honda,9
-86,Kawasaki,automobile.motobikes.kawasaki,9
-87,KTM,automobile.motobikes.ktm,9
-88,Moto Guzzi,automobile.motobikes.moto-guzzi,9
-89,MV Agusta,automobile.motobikes.mv-agusta,9
-90,Suzuki,automobile.motobikes.suzuki,9
-91,Triumph,automobile.motobikes.triumph,9
-92,Yamaha,automobile.motobikes.yamaha,9
-93,Oldtimer,automobile.motobikes.oldtimer,9
-94,Others,automobile.motobikes.others,9
+Id,Name,Slug,Path,ParentID_Fk
+1,Art,art,art,
+2,Automobile,automobile,automobile,
+3,Real estate,real-estate,real-estate,
+4,Valuable,valuable,valuable,
+5,Paintings,paintings,art.paintings,1
+6,Objects,objects,art.objects,1
+7,Miscellaneous,miscellaneous,art.miscellaneous,1
+8,Cars,cars,automobile.cars,2
+9,Motobikes,motobikes,automobile.motobikes,2
+10,Houses,houses,real-estate.houses,3
+11,Appartments,appartments,real-estate.appartments,3
+12,Estate,estate,real-estate.estate,3
+13,Commercial property,commercial-property,real-estate.commercial-property,3
+14,Jewelry,jewelry,valuable.jewelry,4
+15,Antiques,antiques,valuable.antiques,4
+16,Collectibles,collectibles,valuable.collectibles,4
+17,Miscellaneous,miscellaneous,valuable.miscellaneous,4
+18,< 1800,<-1800,art.paintings.<-1800,5
+19,1850 - 1899,1850-1899,art.paintings.1850-1899,5
+20,1900 - 1950,1900-1950,art.paintings.1900-1950,5
+21,1951 - 2000,1951-2000,art.paintings.1951-2000,5
+22,2001 >,2001->,art.paintings.2001->,5
+23,Alfa Romeo,alfa-romeo,automobile.cars.alfa-romeo,8
+24,Aston Martin,aston-martin,automobile.cars.aston-martin,8
+25,Audi,audi,automobile.cars.audi,8
+26,Bentley,bentley,automobile.cars.bentley,8
+27,Buick,buick,automobile.cars.buick,8
+28,BMW,bmw,automobile.cars.bmw,8
+29,Chevrolet,chevrolet,automobile.cars.chevrolet,8
+30,Chrysler,chrysler,automobile.cars.chrysler,8
+31,Citroen,citroen,automobile.cars.citroen,8
+32,Dacia,dacia,automobile.cars.dacia,8
+33,Daewoo,daewoo,automobile.cars.daewoo,8
+34,Daihatsu,daihatsu,automobile.cars.daihatsu,8
+35,Dodge,dodge,automobile.cars.dodge,8
+36,Ferarri,ferarri,automobile.cars.ferarri,8
+37,Fiatv,fiatv,automobile.cars.fiatv,8
+38,Ford,ford,automobile.cars.ford,8
+39,Honda,honda,automobile.cars.honda,8
+40,Hummer,hummer,automobile.cars.hummer,8
+41,Hyundai,hyundai,automobile.cars.hyundai,8
+42,Infiniti,infiniti,automobile.cars.infiniti,8
+43,Isuzu,isuzu,automobile.cars.isuzu,8
+44,Jaguarv,jaguarv,automobile.cars.jaguarv,8
+45,Jeep,jeep,automobile.cars.jeep,8
+46,Kia,kia,automobile.cars.kia,8
+47,Lada,lada,automobile.cars.lada,8
+48,Lamborghini,lamborghini,automobile.cars.lamborghini,8
+49,Lancia,lancia,automobile.cars.lancia,8
+50,Land-Rover,land-rover,automobile.cars.land-rover,8
+51,Lexus,lexus,automobile.cars.lexus,8
+52,Lotus,lotus,automobile.cars.lotus,8
+53,Maserati,maserati,automobile.cars.maserati,8
+54,Mazda,mazda,automobile.cars.mazda,8
+55,Mercedes-Benz,mercedes-benz,automobile.cars.mercedes-benz,8
+56,MG,mg,automobile.cars.mg,8
+57,Mini,mini,automobile.cars.mini,8
+58,Mitsubishi,mitsubishi,automobile.cars.mitsubishi,8
+59,Nissan,nissan,automobile.cars.nissan,8
+60,Opel,opel,automobile.cars.opel,8
+61,Peugeot,peugeot,automobile.cars.peugeot,8
+62,Porsche,porsche,automobile.cars.porsche,8
+63,Renault,renault,automobile.cars.renault,8
+64,Rolls-Royce,rolls-royce,automobile.cars.rolls-royce,8
+65,Rover,rover,automobile.cars.rover,8
+66,Saab,saab,automobile.cars.saab,8
+67,Seat,seat,automobile.cars.seat,8
+68,Skoda,skoda,automobile.cars.skoda,8
+69,Smart,smart,automobile.cars.smart,8
+70,SsangYong,ssangyong,automobile.cars.ssangyong,8
+71,Subaru,subaru,automobile.cars.subaru,8
+72,Suzuki,suzuki,automobile.cars.suzuki,8
+73,Toyota,toyota,automobile.cars.toyota,8
+74,TVR,tvr,automobile.cars.tvr,8
+75,Volvo,volvo,automobile.cars.volvo,8
+76,VW-Volkswagen,vw-volkswagen,automobile.cars.vw-volkswagen,8
+77,Oldtimer,oldtimer,automobile.cars.oldtimer,8
+78,Others,others,automobile.cars.others,8
+79,Aprilia,aprilia,automobile.motobikes.aprilia,9
+80,BMW,bmw,automobile.motobikes.bmw,9
+81,Ducati,ducati,automobile.motobikes.ducati,9
+82,Gilera,gilera,automobile.motobikes.gilera,9
+83,Harley-Davidson,harley-davidson,automobile.motobikes.harley-davidson,9
+84,Husqvana,husqvana,automobile.motobikes.husqvana,9
+85,Honda,honda,automobile.motobikes.honda,9
+86,Kawasaki,kawasaki,automobile.motobikes.kawasaki,9
+87,KTM,ktm,automobile.motobikes.ktm,9
+88,Moto Guzzi,moto-guzzi,automobile.motobikes.moto-guzzi,9
+89,MV Agusta,mv-agusta,automobile.motobikes.mv-agusta,9
+90,Suzuki,suzuki,automobile.motobikes.suzuki,9
+91,Triumph,triumph,automobile.motobikes.triumph,9
+92,Yamaha,yamaha,automobile.motobikes.yamaha,9
+93,Oldtimer,oldtimer,automobile.motobikes.oldtimer,9
+94,Others,others,automobile.motobikes.others,9

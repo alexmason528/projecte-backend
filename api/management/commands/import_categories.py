@@ -15,6 +15,7 @@ class Command(BaseCommand):
                     Category.objects.create(
                         id=row.get('Id').strip(),
                         name=row.get('Name').strip(),
+                        slug=row.get('Slug').strip(),
                         path=row.get('Path').strip(),
                         parent_id=row.get('ParentID_Fk').strip()
                     )
