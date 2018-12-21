@@ -25,9 +25,32 @@ class Item(models.Model):
     details = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-date']
 
 
 class Image(models.Model):
     obj = models.ImageField(upload_to="items/images")
     description = models.TextField()
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+
+class Estimation(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='estimations')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='estimations')
+    estimation = models.FloatField(null=True, blank=True)
+
+
+class Comment(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    parent = models.ForeignKey(
+        'self',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='children',
+    )
