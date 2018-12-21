@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from authentication.models import User
 
-from .models import Item, Category, Image
+from .models import Item, Category, Image, Estimation, Comment
 
 
 class RecursiveField(serializers.Serializer):
@@ -40,6 +40,18 @@ class ItemUserSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'fullname')
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
+class EstimationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Estimation
+        fields = '__all__'
+
+
 class ItemSerializer(serializers.ModelSerializer):
     images = serializers.ListField(child=serializers.ImageField())
     descriptions = serializers.ListField(child=serializers.CharField())
@@ -75,7 +87,10 @@ class ItemSerializer(serializers.ModelSerializer):
             'id': obj.id,
             'facts': obj.facts,
             'name': obj.name,
+            'images': ImageSerializer(obj.image_set, many=True).data,
             'category': SubCategorySerializer(obj.category).data,
             'user': ItemUserSerializer(obj.user).data,
             'details': obj.details,
+            'estimations': EstimationSerializer(obj.estimations, many=True).data,
+            'comments': CommentSerializer(obj.comments, many=True).data,
         }
