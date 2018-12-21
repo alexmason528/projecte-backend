@@ -5,13 +5,13 @@ from rest_framework.response import Response
 
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 5
+    page_size = 10
     max_page_size = 1000
 
     def get_paginated_response(self, data):
         return Response(OrderedDict([
-            ('pageSize', self.page_size),
-            ('currentPage', self.page.number),
-            ('totalCount', self.page.paginator.count),
+            ('totalItemsCount', self.page.paginator.count),
+            ('itemsCountPerPage', self.page_size),
+            ('activePage', self.page.number),
             ('results', data),
         ]))
