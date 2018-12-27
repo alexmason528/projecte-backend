@@ -37,12 +37,6 @@ class Image(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
 
-class Estimation(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='estimations')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='estimations')
-    estimation = models.FloatField(null=True, blank=True)
-
-
 class Comment(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
@@ -54,3 +48,21 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='children',
     )
+
+
+class Estimation(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='estimations')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='estimations')
+    value = models.FloatField(null=True, blank=True)
+    comment = models.OneToOneField(Comment, null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        unique_together = ('item', 'user')
+
+
+class WatchList(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watchlist')
+
+    class Meta:
+        unique_together = ('item', 'user')
