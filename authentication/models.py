@@ -27,6 +27,18 @@ class User(AbstractUser):
     def email_verified(self):
         return not self.email_verify_token
 
+    @property
+    def estimation_count(self):
+        return len(self.estimations.all())
+
+    @property
+    def total_amount(self):
+        return sum(estimation.value for estimation in self.estimations.all())
+
+    @property
+    def accuracy(self):
+        return 7.5
+
     def generate_token(self, token_type):
         if not token_type in ['password_reset_token', 'email_verify_token']:
             raise ValidationError('Token type is not valid.')

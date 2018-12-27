@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
+from api.models import WatchList
+
 from .models import User
 
 from .utils import authenticate, get_jwt_token
@@ -42,13 +44,14 @@ class CustomJSONWebTokenSerializer(JSONWebTokenSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'photo', 'email_verified')
+        fields = ('id', 'username', 'email', 'photo', 'email_verified', 'estimation_count', 'total_amount', 'accuracy')
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'photo', 'email_verified')
+        fields = ('id', 'username', 'email', 'password', 'photo', 'email_verified',
+                  'estimation_count', 'total_amount', 'accuracy')
         read_only_fields = ('id', 'email_verified')
         extra_kwargs = {
             'password': {'write_only': True},
@@ -68,7 +71,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'photo', 'email_verified', 'password')
+        fields = ('id', 'username', 'email', 'photo', 'email_verified',
+                  'estimation_count', 'total_amount', 'accuracy', 'password')
         read_only_fields = ('id', 'email_verified')
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
@@ -101,3 +105,27 @@ class TokenVerifySerializer(serializers.Serializer):
 
 class PasswordResetSerializer(serializers.Serializer):
     email = serializers.EmailField()
+
+
+class WatchListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WatchList
+        fields = ('id', 'item', 'user')
+        extra_kwargs = {
+            'user': {'read_only': True},
+        }
+
+    def validate(self, data):
+        item = data.get('item')
+        user = self.context['request'].user
+
+        if WatchList.objects.filter(item=item, user=user).exists():
+            raise serializers.ValidationError('This item is already in watchlist.')
+
+        return data
+
+    def create(self, validated_data):
+        request = self.context['request']
+        validated_data['user'] = request.user
+
+        return super(WatchListSerializer, self).create(validated_data)
