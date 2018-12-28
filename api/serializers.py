@@ -128,19 +128,19 @@ class CommentSerializer(serializers.ModelSerializer):
 class ItemDetailSerializer(serializers.ModelSerializer):
     estimations = EstimationSerializer(many=True)
     user = UserSerializer()
-    images = ImageSerializer(many=True)
     category = CategorySerializer()
     comments = CommentSerializer(many=True)
 
     class Meta:
         model = Item
-        fields = ('id', 'name', 'facts', 'details', 'category', 'user', 'date', 'images', 'comments', 'estimations')
+        fields = ('id', 'name', 'facts', 'details', 'category', 'user', 'date', 'comments', 'estimations')
 
     def to_representation(self, instance):
         user = self.context['request'].user
 
         res = super(ItemDetailSerializer, self).to_representation(instance)
         res['in_watchlist'] = False if user.is_anonymous else user.watchlist.filter(item=instance).exists()
+        res['images'] = ImageSerializer(instance.images, many=True).data
 
         return res
 
