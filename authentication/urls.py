@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from api.views import MyListingsView, WatchItemView
+from api.views import MyListingsView, WatchItemView, WatchItemDestroyView
 
 from .views import LogInView, RegisterView, VerifyEmailView, PasswordResetView, ProfileView
 
@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^password-reset/$', PasswordResetView.as_view()),
     url(r'^profile/$', ProfileView.as_view()),
     url(r'^my-listings/$', MyListingsView.as_view()),
+    url(r'^watchlist/(?P<item>(\w+))/$', WatchItemDestroyView.as_view()),
     url(r'^watchlist/$', WatchItemView.as_view()),
 ]
