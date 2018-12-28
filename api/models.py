@@ -63,6 +63,8 @@ class Estimation(models.Model):
 class WatchItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watchlist')
+    date = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ['-date']
         unique_together = ('item', 'user')
