@@ -24,7 +24,7 @@ class Item(models.Model):
     facts = JSONField()
     details = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='items')
     date = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -34,7 +34,7 @@ class Item(models.Model):
 class Image(models.Model):
     obj = models.ImageField(upload_to="items/images")
     description = models.TextField()
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
 
 
 class Comment(models.Model):
@@ -60,7 +60,7 @@ class Estimation(models.Model):
         unique_together = ('item', 'user')
 
 
-class WatchList(models.Model):
+class WatchItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watchlist')
 

@@ -1,7 +1,8 @@
 import os
 import secrets
 
-from rest_framework import generics, status
+from rest_framework import status
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListCreateAPIView, ListAPIView, GenericAPIView, RetrieveUpdateAPIView
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
@@ -13,8 +14,6 @@ from rest_framework_jwt.utils import (
 )
 from rest_framework_jwt.views import JSONWebTokenAPIView
 
-from api.models import WatchList
-
 from .models import User
 
 from .serializers import (
@@ -24,7 +23,6 @@ from .serializers import (
     UserUpdateSerializer,
     TokenVerifySerializer,
     PasswordResetSerializer,
-    WatchListSerializer,
 )
 
 from .utils import validate_token, get_jwt_token, get_user_from_email
@@ -49,7 +47,7 @@ class LogInView(JSONWebTokenAPIView):
         return Response(response_data)
 
 
-class RegisterView(generics.CreateAPIView):
+class RegisterView(CreateAPIView):
     authentication_classes = ()
     permission_classes = ()
     serializer_class = UserCreateSerializer
@@ -68,7 +66,7 @@ class RegisterView(generics.CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class VerifyEmailView(generics.CreateAPIView, generics.RetrieveAPIView):
+class VerifyEmailView(CreateAPIView, RetrieveAPIView):
     serializer_class = TokenVerifySerializer
 
     def get_authenticators(self):
@@ -107,7 +105,7 @@ class VerifyEmailView(generics.CreateAPIView, generics.RetrieveAPIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-class PasswordResetView(generics.RetrieveUpdateAPIView):
+class PasswordResetView(RetrieveUpdateAPIView):
     authentication_classes = ()
     permission_classes = ()
 
@@ -140,7 +138,7 @@ class PasswordResetView(generics.RetrieveUpdateAPIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-class ProfileView(generics.RetrieveUpdateAPIView):
+class ProfileView(RetrieveUpdateAPIView):
     parser_classes = (MultiPartParser, )
 
     def get_serializer_class(self):
@@ -170,11 +168,3 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         }
 
         return Response(response_data)
-
-
-class WatchListView(generics.ListCreateAPIView, generics.GenericAPIView):
-    serializer_class = WatchListSerializer
-
-    def get_queryset(self):
-        queryset = WatchList.objects.filter(user=self.request.user)
-        return queryset

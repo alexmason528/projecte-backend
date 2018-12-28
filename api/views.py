@@ -12,17 +12,21 @@ from utils.pagination import StandardResultsSetPagination
 from .models import Item, Category
 
 from .serializers import (
-    ItemSerializer,
+    ItemListCreateSerializer,
+    ItemDetailSerializer,
     ItemEstimationSerializer,
+    ItemReplySerializer,
     CategorySerializer,
     ImageSerializer,
+    WatchItemCreateSerializer,
+    WatchItemListSerializer
 )
 
 from .filters import ItemOrderingFilter
 
 
 class ItemMixin(object):
-    serializer_class = ItemSerializer
+    serializer_class = ItemListCreateSerializer
     pagination_class = StandardResultsSetPagination
     filter_backends = (ItemOrderingFilter, filters.SearchFilter)
     search_fields = ('name', 'details')
@@ -39,7 +43,7 @@ class ItemRetriveUpdateDestroyView(
     generics.RetrieveUpdateDestroyAPIView,
     generics.GenericAPIView
 ):
-    pass
+    serializer_class = ItemDetailSerializer
 
 
 class ItemListCreateView(ItemMixin, generics.ListCreateAPIView):
@@ -48,6 +52,10 @@ class ItemListCreateView(ItemMixin, generics.ListCreateAPIView):
 
 class ItemEstimationView(ItemMixin, generics.CreateAPIView):
     serializer_class = ItemEstimationSerializer
+
+
+class ItemReplyView(ItemMixin, generics.CreateAPIView):
+    serializer_class = ItemReplySerializer
 
 
 class CategoryView(generics.ListAPIView):
@@ -60,3 +68,25 @@ class CategoryView(generics.ListAPIView):
         serializer = self.get_serializer(category)
 
         return Response(serializer.data.get('children'))
+
+
+class MyListingsView(generics.ListAPIView, generics.GenericAPIView):
+    serializer_class = ItemListCreateSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        return self.request.user.items.all()
+
+
+class WatchItemView(generics.ListCreateAPIView, generics.GenericAPIView):
+    pagination_class = StandardResultsSetPagination
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST']:
+            return WatchItemCreateSerializer
+        return WatchItemListSerializer
+
+    def get_queryset(self):
+        if self.request.method in ['POST']:
+            return WatchItem.objects.filter(user=self.request.user)
+        return self.request.user.watchlist.select_related('item').all()

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from authentication.models import User
 from authentication.serializers import UserSerializer
 
-from .models import Item, Category, Image, Estimation, Comment
+from .models import Item, Category, Image, Estimation, Comment, WatchItem
 
 
 class RecursiveField(serializers.Serializer):
@@ -27,9 +27,6 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    obj = serializers.ImageField()
-    description = serializers.CharField()
-
     class Meta:
         model = Image
         fields = '__all__'
@@ -86,13 +83,36 @@ class ItemEstimationSerializer(serializers.ModelSerializer):
         return res
 
 
+class ItemReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('id', 'item', 'content', 'parent')
+
+    def validate(self, data):
+        super(ItemReplySerializer, self).validate(data)
+
+        parent = data.get('parent')
+
+        if parent.parent:
+            raise serializers.ValidationError('Two levels of nested comments are not allowed.')
+
+        return data
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+
+        return super(ItemReplySerializer, self).create(validated_data)
+
+    def to_representation(self, instance):
+        return CommentSerializer(instance).data
+
+
 class EstimationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estimation
         fields = ('id', 'item', 'value', 'user')
-        extra_kwargs = {
-            'user': {'read_only': True},
-        }
+        read_only_fields = ('user', )
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -102,10 +122,30 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id', 'item', 'user', 'content', 'children', 'estimation')
+        fields = ('id', 'item', 'user', 'content', 'children', 'parent', 'estimation')
 
 
-class ItemSerializer(serializers.ModelSerializer):
+class ItemDetailSerializer(serializers.ModelSerializer):
+    estimations = EstimationSerializer(many=True)
+    user = UserSerializer()
+    images = ImageSerializer(many=True)
+    category = CategorySerializer()
+    comments = CommentSerializer(many=True)
+
+    class Meta:
+        model = Item
+        fields = ('id', 'name', 'facts', 'details', 'category', 'user', 'date', 'images', 'comments', 'estimations')
+
+    def to_representation(self, instance):
+        user = self.context['request'].user
+
+        res = super(ItemDetailSerializer, self).to_representation(instance)
+        res['in_watchlist'] = False if user.is_anonymous else user.watchlist.filter(item=instance).exists()
+
+        return res
+
+
+class ItemListCreateSerializer(serializers.ModelSerializer):
     images = serializers.ListField(child=serializers.ImageField())
     descriptions = serializers.ListField(child=serializers.CharField())
 
@@ -114,7 +154,7 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = ('id', 'facts', 'name', 'category', 'details', 'images', 'descriptions')
 
     def validate(self, data):
-        super(ItemSerializer, self).validate(data)
+        super(ItemListCreateSerializer, self).validate(data)
 
         images = data.get('images')
         descriptions = data.get('descriptions')
@@ -135,19 +175,46 @@ class ItemSerializer(serializers.ModelSerializer):
 
         return item
 
-    def to_representation(self, obj):
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'name': instance.name,
+            'images': ImageSerializer(instance.images, many=True).data,
+            'estimations': EstimationSerializer(instance.estimations, many=True).data,
+            'category': CategorySerializer(instance.category).data,
+            'comments_count': instance.comments.count(),
+        }
+
+
+class WatchItemCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WatchItem
+        fields = ('id', 'item', 'user')
+        read_only_fields = ('user',)
+
+    def validate(self, data):
+        item = data.get('item')
         user = self.context['request'].user
 
-        return {
-            'id': obj.id,
-            'facts': obj.facts,
-            'name': obj.name,
-            'details': obj.details,
-            'date': obj.date,
-            'images': ImageSerializer(obj.image_set, many=True).data,
-            'category': SubCategorySerializer(obj.category).data,
-            'user': ItemUserSerializer(obj.user).data,
-            'estimations': EstimationSerializer(obj.estimations, many=True).data,
-            'comments': CommentSerializer(obj.comments, many=True).data,
-            'in_watchlist': user.watchlist.filter(item=obj).exists(),
-        }
+        if WatchItem.objects.filter(item=item, user=user).exists():
+            raise serializers.ValidationError('This item is already in watchlist.')
+
+        return data
+
+    def create(self, validated_data):
+        request = self.context['request']
+        validated_data['user'] = request.user
+
+        return super(WatchItemCreateSerializer, self).create(validated_data)
+
+
+class WatchItemListSerializer(serializers.ModelSerializer):
+    item = ItemListCreateSerializer()
+
+    class Meta:
+        model = WatchItem
+        fields = ('id', 'item', 'user')
+
+    def to_representation(self, instance):
+        res = super(WatchItemListSerializer, self).to_representation(instance)
+        return res.get('item')
