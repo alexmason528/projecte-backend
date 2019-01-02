@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Avg
 
 from rest_framework import filters
 
@@ -8,9 +8,14 @@ class ItemOrderingFilter(filters.OrderingFilter):
         params = request.query_params.get(self.ordering_param)
 
         if params:
-            if '-estimation' in request.query_params[self.ordering_param]:
+            if '-price' in params:
+                queryset = queryset.annotate(price=Avg('estimations__value')).order_by('-price')
+            elif 'price' in params:
+                queryset = queryset.annotate(price=Avg('estimations__value')).order_by('price')
+
+            if '-estimation' in params:
                 queryset = queryset.annotate(estimation_counts=Count('estimations')).order_by('-estimation_counts')
-            elif 'estimation' in request.query_params[self.ordering_param]:
+            elif 'estimation' in params:
                 queryset = queryset.annotate(estimation_counts=Count('estimations')).order_by('estimation_counts')
 
         return super(ItemOrderingFilter, self).filter_queryset(request, queryset, view)
