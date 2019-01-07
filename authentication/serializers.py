@@ -44,6 +44,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email', 'photo', 'email_verified', 'estimation_count', 'total_amount', 'accuracy')
 
+    def to_representation(self, instance):
+        res = super(UserSerializer, self).to_representation(instance)
+        res['photo'] = instance.photo.url
+
+        return res
+
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
