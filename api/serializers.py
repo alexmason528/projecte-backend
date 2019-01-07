@@ -27,6 +27,8 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    description = serializers.CharField(required=False)
+
     class Meta:
         model = Image
         fields = '__all__'
@@ -147,26 +149,16 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
 class ItemListCreateSerializer(serializers.ModelSerializer):
     images = serializers.ListField(child=serializers.ImageField())
-    descriptions = serializers.ListField(child=serializers.CharField())
+    descriptions = serializers.ListField(child=serializers.CharField(allow_blank=True))
 
     class Meta:
         model = Item
         fields = ('id', 'facts', 'name', 'category', 'details', 'images', 'descriptions')
 
-    def validate(self, data):
-        super(ItemListCreateSerializer, self).validate(data)
-
-        images = data.get('images')
-        descriptions = data.get('descriptions')
-
-        if len(images) != len(descriptions):
-            raise serializers.ValidationError('All images require descriptions.')
-
-        return data
-
     def create(self, validated_data):
         images = validated_data.pop('images')
         descriptions = validated_data.pop('descriptions')
+
         validated_data['user'] = self.context['request'].user
         item = Item.objects.create(**validated_data)
 
