@@ -12,6 +12,8 @@ from rest_framework.exceptions import ValidationError
 
 from simplecrypt import encrypt
 
+from .utils import calculate_accuracy
+
 
 class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
@@ -37,7 +39,7 @@ class User(AbstractUser):
 
     @property
     def accuracy(self):
-        return 7.5
+        return calculate_accuracy(self)
 
     def generate_token(self, token_type):
         if not token_type in ['password_reset_token', 'email_verify_token']:

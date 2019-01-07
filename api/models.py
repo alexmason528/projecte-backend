@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.contrib.postgres.fields import JSONField
 
 # Create your models here.
@@ -18,6 +19,12 @@ class Category(models.Model):
         related_name='children',
     )
 
+    class Meta:
+        verbose_name_plural = "categories"
+
+    def __str__(self):
+        return self.name
+
 
 class Item(models.Model):
     name = models.CharField(max_length=256)
@@ -29,6 +36,17 @@ class Item(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def average_estimation(self):
+        return self.estimations.all().aggregate(average_estimation=Avg('value')).get('average_estimation')
+
+    @property
+    def estimation_count(self):
+        return len(self.estimations.all())
 
 
 class Image(models.Model):
@@ -48,6 +66,9 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='children',
     )
+
+    def __str__(self):
+        return '{} - {}'.format(self.item, self.user)
 
 
 class Estimation(models.Model):

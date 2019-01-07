@@ -90,3 +90,22 @@ def get_payload_from_token(token):
         return None
 
     return payload
+
+
+def calculate_accuracy(user):
+    estimations = user.estimations.all()
+    estimation_count = len(estimations)
+
+    if estimation_count < 50:
+        return 0
+
+    accuracy_sum = 0
+
+    for estimation in estimations:
+        value = estimation.value
+        average_estimation = estimation.item.average_estimation
+
+        accuracy = 100 if average_estimation == value else (100 - abs(average_estimation-value) / average_estimation)
+        accuracy_sum += accuracy
+
+    return accuracy_sum / estimation_count
