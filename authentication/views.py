@@ -168,3 +168,10 @@ class ProfileView(RetrieveUpdateAPIView):
         }
 
         return Response(response_data)
+
+
+class UserInfoView(RetrieveAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    authentication_classes = ()
+    permission_classes = ()
