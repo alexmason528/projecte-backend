@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from api.models import Item
 from api.serializers import ItemListCreateSerializer, ItemDetailSerializer, ItemEstimationSerializer, ItemReplySerializer
-from api.filters import ItemOrderingFilter
+from api.filters import ItemOrderingFilter, ItemCategoryFilter
 
 from utils.pagination import StandardResultsSetPagination
 
@@ -13,7 +13,7 @@ from utils.pagination import StandardResultsSetPagination
 class ItemMixin(object):
     serializer_class = ItemListCreateSerializer
     pagination_class = StandardResultsSetPagination
-    filter_backends = (ItemOrderingFilter, filters.SearchFilter)
+    filter_backends = (ItemOrderingFilter, ItemCategoryFilter, filters.SearchFilter)
     search_fields = ('name', 'details')
     ordering_fields = ('id', 'name', 'details', 'date')
     permission_classes = (IsAuthenticatedOrReadOnly,)
