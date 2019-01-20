@@ -46,7 +46,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         res = super(UserSerializer, self).to_representation(instance)
-        res['photo'] = instance.photo.url
+        if instance.photo:
+            res['photo'] = instance.photo.url
 
         return res
 

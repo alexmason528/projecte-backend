@@ -63,6 +63,11 @@ class RegisterView(CreateAPIView):
             'user': serializer.data,
         }
 
+        try:
+            user.send_email('verify')
+        except:
+            pass
+
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
 
