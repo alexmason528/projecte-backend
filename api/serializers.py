@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import serializers
 
 from authentication.models import User
@@ -24,6 +26,20 @@ class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name')
+
+
+class ImageUploadSerializer(serializers.Serializer):
+    images = serializers.ListField(child=serializers.ImageField())
+
+    def create(self, validated_data):
+        return [
+            Image.objects.create(obj=image) for image in validated_data.get('images')
+        ]
+
+    def to_representation(self, objects):
+        return {
+            'images': ImageSerializer(objects, many=True).data
+        }
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -95,7 +111,7 @@ class ItemReplySerializer(serializers.ModelSerializer):
 
         parent = data.get('parent')
 
-        if parent.parent:
+        if parent and parent.parent:
             raise serializers.ValidationError('Two levels of nested comments are not allowed.')
 
         return data
@@ -147,23 +163,30 @@ class ItemDetailSerializer(serializers.ModelSerializer):
         return res
 
 
+class ItemImageSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    description = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
+
 class ItemListCreateSerializer(serializers.ModelSerializer):
-    images = serializers.ListField(child=serializers.ImageField())
-    descriptions = serializers.ListField(child=serializers.CharField(allow_blank=True))
+    images = serializers.ListField(child=ItemImageSerializer())
 
     class Meta:
         model = Item
-        fields = ('id', 'facts', 'name', 'category', 'details', 'images', 'descriptions')
+        fields = ('id', 'facts', 'name', 'category', 'details', 'images')
 
     def create(self, validated_data):
-        images = validated_data.pop('images')
-        descriptions = validated_data.pop('descriptions')
+        images = []
+        for image in validated_data.pop('images'):
+            obj = get_object_or_404(Image, pk=image.get('id'))
+            obj.description = image.get('description')
+            obj.save()
+            images.append(obj)
 
         validated_data['user'] = self.context['request'].user
         item = Item.objects.create(**validated_data)
 
-        for ind, image in enumerate(images):
-            Image.objects.create(obj=image, description=descriptions[ind], item=item)
+        item.images.set(images)
 
         return item
 
