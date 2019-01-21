@@ -143,6 +143,11 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('id', 'item', 'user', 'content', 'children', 'parent', 'estimation')
 
 
+class ItemImageSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    description = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
+
 class ItemDetailSerializer(serializers.ModelSerializer):
     estimations = EstimationSerializer(many=True)
     user = UserSerializer()
@@ -163,9 +168,31 @@ class ItemDetailSerializer(serializers.ModelSerializer):
         return res
 
 
-class ItemImageSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    description = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+class ItemDetailUpdateSerializer(serializers.ModelSerializer):
+    images = ItemImageSerializer(many=True)
+
+    class Meta:
+        model = Item
+        fields = ('name', 'facts', 'details', 'category', 'images')
+
+    def update(self, instance, validated_data):
+        image_data = validated_data.pop('images', None)
+        instance = super(ItemDetailUpdateSerializer, self).update(instance, validated_data)
+
+        if not image_data:
+            return instance
+
+        images = []
+
+        for image in image_data:
+            obj = Image.objects.get(pk=image.get('id'))
+            obj.description = image.get('description')
+            obj.save()
+            images.append(obj)
+
+        instance.images.set(images)
+        instance.save()
+        return instance
 
 
 class ItemListCreateSerializer(serializers.ModelSerializer):

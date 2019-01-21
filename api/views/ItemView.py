@@ -4,7 +4,7 @@ from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from api.models import Item
-from api.serializers import ItemListCreateSerializer, ItemDetailSerializer, ItemEstimationSerializer, ItemReplySerializer
+from api.serializers import ItemListCreateSerializer, ItemDetailSerializer, ItemDetailUpdateSerializer, ItemEstimationSerializer, ItemReplySerializer
 from api.filters import ItemOrderingFilter, ItemCategoryFilter
 
 from utils.pagination import StandardResultsSetPagination
@@ -28,7 +28,10 @@ class ItemRetriveUpdateDestroyView(
     generics.RetrieveUpdateDestroyAPIView,
     generics.GenericAPIView
 ):
-    serializer_class = ItemDetailSerializer
+    def get_serializer_class(self):
+        if self.request.method in ['PATCH']:
+            return ItemDetailUpdateSerializer
+        return ItemDetailSerializer
 
 
 class ItemListCreateView(ItemMixin, generics.ListCreateAPIView):
