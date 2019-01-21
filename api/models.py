@@ -52,7 +52,7 @@ class Item(models.Model):
 class Image(models.Model):
     obj = models.ImageField(upload_to="items/images")
     description = models.TextField(blank=True, null=True)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images', blank=True, null=True)
 
 
 class Comment(models.Model):
