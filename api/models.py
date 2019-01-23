@@ -33,6 +33,7 @@ class Item(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='items')
     date = models.DateTimeField(auto_now=True)
+    slug = models.CharField(max_length=512, null=True, blank=True)
 
     class Meta:
         ordering = ['-date']
