@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^password-reset/$', PasswordResetView.as_view()),
     url(r'^profile/$', ProfileView.as_view()),
     url(r'^my-listings/$', MyListingsView.as_view()),
-    url(r'^watchlist/(?P<item>(\w+))/$', WatchItemDestroyView.as_view()),
+    url(r'^watchlist/(?P<slug>(.+))/$', WatchItemDestroyView.as_view()),
     url(r'^watchlist/$', WatchItemView.as_view()),
     url(r'^user-info/(?P<pk>(\w+))/$', UserInfoView.as_view()),
 ]

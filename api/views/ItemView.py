@@ -28,6 +28,7 @@ class ItemRetriveUpdateDestroyView(
     generics.RetrieveUpdateDestroyAPIView,
     generics.GenericAPIView
 ):
+    lookup_field = 'slug'
     def get_serializer_class(self):
         if self.request.method in ['PATCH']:
             return ItemDetailUpdateSerializer

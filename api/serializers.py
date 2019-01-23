@@ -1,3 +1,5 @@
+from slugify import slugify
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers
@@ -156,7 +158,8 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'name', 'facts', 'details', 'category', 'user', 'date', 'comments', 'estimations')
+        fields = ('id', 'name', 'facts', 'details', 'category', 'user', 'date', 'comments', 'estimations', 'slug')
+        read_only_fields = ('slug',)
 
     def to_representation(self, instance):
         user = self.context['request'].user
@@ -173,11 +176,14 @@ class ItemDetailUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('name', 'facts', 'details', 'category', 'images')
+        fields = ('name', 'facts', 'details', 'category', 'images', 'slug')
+        read_only_fields = ('slug',)
 
     def update(self, instance, validated_data):
         image_data = validated_data.pop('images', None)
         instance = super(ItemDetailUpdateSerializer, self).update(instance, validated_data)
+        instance.slug = slugify('{}-{}'.format(instance.name, instance.id))
+        instance.save()
 
         if not image_data:
             return instance
@@ -192,6 +198,7 @@ class ItemDetailUpdateSerializer(serializers.ModelSerializer):
 
         instance.images.set(images)
         instance.save()
+
         return instance
 
 
@@ -200,7 +207,8 @@ class ItemListCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('id', 'facts', 'name', 'category', 'details', 'images')
+        fields = ('id', 'facts', 'name', 'category', 'details', 'images', 'slug')
+        read_only_fields = ('slug',)
 
     def create(self, validated_data):
         images = []
@@ -213,6 +221,9 @@ class ItemListCreateSerializer(serializers.ModelSerializer):
         validated_data['user'] = self.context['request'].user
         item = Item.objects.create(**validated_data)
 
+        item.slug = slugify('{}-{}'.format(item.name, item.id))
+        item.save()
+
         item.images.set(images)
 
         return item
@@ -221,6 +232,7 @@ class ItemListCreateSerializer(serializers.ModelSerializer):
         return {
             'id': instance.id,
             'name': instance.name,
+            'slug': instance.slug,
             'images': ImageSerializer(instance.images, many=True).data,
             'estimations': EstimationSerializer(instance.estimations, many=True).data,
             'category': CategorySerializer(instance.category).data,
