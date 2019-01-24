@@ -1,12 +1,12 @@
 from django.conf.urls import url
 from rest_framework import routers
 
-from .views import ItemListCreateView, ItemRetriveUpdateDestroyView, ItemEstimationView, ItemReplyView, CategoryView, ImageUploadView
+from .views import ItemListCreateView, ItemRetriveUpdateDestroyView, ItemEstimationView, ItemReplyView, CategoryListView, ImageUploadView
 
 router = routers.SimpleRouter()
 
 urlpatterns = [
-    url(r'category/(?P<item>(.+))/$', CategoryView.as_view()),
+    url(r'category/$', CategoryListView.as_view()),
     url(r'item/(?P<type>(.+))/(?P<slug>(.+))/reply/$', ItemReplyView.as_view()),
     url(r'item/(?P<type>(.+))/(?P<slug>(.+))/estimation/$', ItemEstimationView.as_view()),
     url(r'item/(?P<type>(.+))/(?P<slug>(.+))/$', ItemRetriveUpdateDestroyView.as_view()),
