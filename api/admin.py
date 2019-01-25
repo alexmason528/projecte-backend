@@ -5,7 +5,7 @@ from .models import Category, Item, Image, Comment, Estimation, WatchItem
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'slug')
+    list_display = ('id', 'name', 'slug', 'path')
     list_display_links = ('id', 'name', 'slug')
     readonly_fields = ('id',)
 

@@ -1,4 +1,5 @@
 import random
+from slugify import slugify
 
 from django.core.management.base import BaseCommand
 from api.models import *
@@ -26,8 +27,10 @@ class Command(BaseCommand):
         }
 
         for i in range(1, 51):
-            Item.objects.create(name='{} {}'.format(estate_names[random.randrange(
+            item = Item.objects.create(name='{} {}'.format(estate_names[random.randrange(
                 0, len(estate_names)-1)], i), facts=facts, details=details, category_id=random.randrange(10, 13), user_id=1)
+            item.slug = slugify('{}-{}'.format(item.name, item.id))
+            item.save()
 
         for i in range(1, 20):
             Image.objects.create(obj='items/images/{}.jpg'.format(i),

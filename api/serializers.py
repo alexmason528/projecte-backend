@@ -19,7 +19,7 @@ class RecursiveField(serializers.Serializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ('id', 'name', 'path', 'parent', 'slug')
+        fields = ('id', 'name', 'path', 'parent', 'slug', 'translation')
 
 
 class SubCategorySerializer(serializers.ModelSerializer):
