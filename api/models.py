@@ -18,9 +18,11 @@ class Category(models.Model):
         on_delete=models.CASCADE,
         related_name='children',
     )
+    translation = JSONField(default=dict())
 
     class Meta:
         verbose_name_plural = "categories"
+        ordering = ['id']
 
     def __str__(self):
         return self.name
